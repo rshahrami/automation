@@ -1,0 +1,10 @@
+---
+- hosts: nodes
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  roles:
+  - update_all
+  - java
+  - xfce
+  - firefox

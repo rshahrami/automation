@@ -1,0 +1,22 @@
+---
+# tasks file for firefox
+
+- name: ensure a list of packages installed
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - bzip2
+
+- name: Unarchive a file that is already on the remote machine
+  unarchive:
+    src: files/firefox-80.0.tar.bz2
+    dest: /usr/local
+    remote_src: no
+
+- name: Create symbolic link 
+  file:
+    src: /usr/local/firefox/firefox
+    dest: /usr/bin/firefox
+    state: link
+    force: yes

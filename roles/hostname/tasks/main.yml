@@ -1,0 +1,10 @@
+---
+# tasks file for hostname
+
+- name: set hostname and ip to /etc/hosts
+  shell: |
+    cat <<EOF | sudo tee /etc/hosts
+    192.168.143.22  kuber-master
+    192.168.143.28  kuber-slave1
+    192.168.143.26  kuber-slave2
+    EOF

@@ -1,0 +1,50 @@
+---
+# tasks file for xfce
+
+- name: ensure a list of packages installed
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - "@X Window system"
+    - "@xfce"
+    - xrdp
+
+- name: get default runlevel
+  command: systemctl get-default
+  register: runlevel
+
+- name: Set graphical runlevel
+  command: systemctl set-default graphical.target
+  when: runlevel.stdout != "graphical.target"
+
+
+- name: Switch to graphical runlevel
+  command: systemctl isolate graphical.target
+
+- name: start and enable xrdp
+  systemd:
+    name: xrdp
+    state: started
+    enabled: yes
+  register: xrdp_start_and_enable_xrdp
+  until:
+    - xrdp_start_and_enable_xrdp is succeeded
+  retries: 3
+
+- name: Add port to firewalld
+  firewalld:
+    port: 3389/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: echo "xfce4-session" to ~/.Xclients
+  shell: echo 'xfce4-session' >> ~/.Xclients
+
+- name: using symbolic modes to set the permissions  # root user used xrdp
+  file:
+    path: ~/.Xclients
+    state: file
+    mode: "a+x"
