@@ -1,2 +1,5 @@
 ---
-# vars file for update_all
+reboot_connect_timeout: 5
+reboot_timeout: 240
+reboot_pre_reboot_delay: 10
+reboot_post_reboot_delay: 15

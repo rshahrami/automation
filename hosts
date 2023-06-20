@@ -45,6 +45,8 @@
 
 
 [nodes]
-node_1 ansible_user=root
-node_2 ansible_user=root
-node_3 ansible_user=root
+# localhost
+test
+# node_1 ansible_user=root
+# node_2 ansible_user=root
+# node_3 ansible_user=root

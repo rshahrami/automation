@@ -1,0 +1,110 @@
+---
+# tasks file for docker
+# - name: set registry nexus to /etc/apt/source.list for focal VERSION_CODENAME
+#   lineinfile:
+#     path: /etc/apt/source.list
+#     insertbeforce: BOF
+#     line: deb '{{ NEXUS_REGISTRY_URL }}'/docker-focal/ focal main
+#   when: ansible_distribution == "ubuntu" and ansible_distribution_major_version == "20"
+
+
+# - name: set registry nexus to /etc/apt/source.list for jammy VERSION_CODENAME 
+#   lineinfile:
+#     path: /etc/apt/source.list
+#     insertbeforce: BOF
+#     line: deb '{{ NEXUS_REGISTRY_URL }}'/docker-jammy/ jammy main
+#   when: ansible_distribution == "ubuntu" and ansible_distribution_major_version == "22"
+- name: stop and disable old version docker
+  service:
+    name: docker
+    state: stopped
+    enabled: false
+
+
+- name: autoremove all packages relations with docker
+  apt: 
+    name: {{ with }}
+    autoremove: true
+    purge: true
+    force_apt_get: true
+    with_items:
+      - docker-engine
+      - docker
+      - docker.io
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose-plugin
+
+
+- name: remove all file relations with docker
+  file: 
+    path: {{ with }}
+    state: absent
+    with_items:
+      - /var/lib/docker
+      - /etc/docker
+      - /var/run/docker.sock
+
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb '{{ NEXUS_REGISTRY_URL }}'/docker-jammy/ jammy main
+    state: present
+  when: ansible_distribution == "ubuntu" and ansible_distribution_major_version == "22"
+
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb '{{ NEXUS_REGISTRY_URL }}'/docker-focal/ focal main
+    state: present
+  when: ansible_distribution == "ubuntu" and ansible_distribution_major_version == "20"    
+
+
+- name: Upgrade debian family.
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: Update all packages to their latest version
+  apt:
+    name: '*'
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: Update packages to latest version.
+  apt:
+    upgrade: dist
+    force_apt_get: yes   
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: install docker 
+  apt: 
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+  with_items:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+
+
+- name: create docker group
+  group:
+    name: docker
+    state: present
+
+
+- name: get USER name for add to docker group
+  
+
+
+  
+- name: add user to docker group 

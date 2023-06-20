@@ -1,0 +1,4 @@
+---
+# vars file for docker
+dockerFileDirectory: /home/ubuntu/kubernetes/ansible/kuber-cluster/roles
+NEXUS_REGISTRY_URL: http://192.168.143.34:8081/repository
