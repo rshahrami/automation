@@ -1,11 +1,12 @@
 ---
 - hosts: nodes
-  remote_user: ansible
-  become: yes
+  remote_user: root
+  become: true
+  become_user: root
   become_method: sudo
   roles:
   - update_all
-  - java
-  - xfce
-  - firefox
+  # - java
+  # - xfce
+  # - firefox
   - docker

@@ -19,31 +19,34 @@
     name: docker
     state: stopped
     enabled: false
+  ignore_errors: true
 
 
-- name: autoremove all packages relations with docker
+- name: remove all packages relations with docker
   apt: 
-    name: {{ with }}
+    name: "{{ item }}"
+    state: "absent"
     autoremove: true
     purge: true
     force_apt_get: true
-    with_items:
-      - docker-engine
-      - docker
-      - docker.io
-      - docker-ce
-      - docker-ce-cli
-      - docker-compose-plugin
+  with_items:
+    - docker.io
+    - docker-doc
+    - docker-compose
+    - podman-docker
+    - containerd
+    - runc
+  ignore_errors: true
 
 
 - name: remove all file relations with docker
   file: 
-    path: {{ with }}
+    path: "{{ item }}"
     state: absent
-    with_items:
-      - /var/lib/docker
-      - /etc/docker
-      - /var/run/docker.sock
+  with_items:
+    - "/var/lib/docker"
+    - "/etc/docker"
+    - "/var/run/docker.sock"
 
 
 - name: Add Docker Repository
@@ -94,6 +97,17 @@
     - containerd.io
     - docker-buildx-plugin
     - docker-compose-plugin
+  retries: 3
+  delay: 3
+  register: result
+  until: result.rc == 0
+
+
+- name: start ansd enable docker service
+  service:
+    name: docker
+    enabled: yes
+    state: started
 
 
 - name: create docker group
@@ -102,9 +116,8 @@
     state: present
 
 
-- name: get USER name for add to docker group
-  
-
-
-  
-- name: add user to docker group 
+# - name: add user to docker group 
+#   user:
+#     name: "{{ ansible_facts['env']['USER'] }}"
+#     group: docker
+#     append: yes

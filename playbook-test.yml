@@ -1,0 +1,64 @@
+- name: test
+  hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    # - name: ansible var
+    #   debug:
+    #     var: ansible_env.USER
+    #   register: output
+
+    # # - name: ansible 
+    # #   debug:
+    # #     msg: {output}
+
+    # # - name: ansible 
+    # #   debug:
+    # #     msg: ansible_env.USER
+
+    # - name: ansible output
+    #   shell: cat /etc/passwd
+    #   register: output_2
+    #   when: ansible_env.USER == "administrator"
+
+    # - name: output
+    #   debug:
+    #     msg: "{{ ansible_env.USER }}"
+
+    # - name: output
+    #   debug:
+    #     msg: "{{ ansible_facts['env']['USER'] }}"
+    #   register: output
+
+    # - name: output
+    #   debug:
+    #     msg: "{{ output }}"
+
+
+    # - name: output
+    #   debug:
+    #     msg: "{{ ansible_facts['env']['USER'] }}"
+    #   register: output
+
+    # - name: output
+    #   debug:
+    #     msg: "{{ output }}"
+    
+    - name: create file
+      file:
+        path: /home/administrator/{{ ansible_facts['env']['USER'] }}
+        state: touch
+
+
+    - name: create docker group
+      group:
+        name: docker
+        state: present
+
+
+    - name: add suser
+      user:
+        name: "{{ ansible_facts['env']['USER'] }}"
+        group: docker
+

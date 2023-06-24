@@ -10,7 +10,7 @@
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 
-- name: Upgrade debian family.
+- name: Upgrade ubuntu.
   apt:
     update_cache: yes
     force_apt_get: yes
