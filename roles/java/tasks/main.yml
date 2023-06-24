@@ -12,10 +12,6 @@
     dest: /usr/java/
     remote_src: no
   
-# - name: copy directory - java.sh
-#   copy:
-#     src: files/java.sh
-#     dest: /etc/profile.d/
 
 - name: add br_netfilter to k8s.conf
   shell: |
