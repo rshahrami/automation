@@ -5,8 +5,6 @@
   become_user: root
   become_method: sudo
   roles:
-  - update_all
-  # - java
-  # - xfce
-  # - firefox
+  - update
   - docker
+  - xfce

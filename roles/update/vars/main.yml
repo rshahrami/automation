@@ -1,4 +1,5 @@
 ---
+
 reboot_connect_timeout: 5
 reboot_timeout: 240
 reboot_pre_reboot_delay: 10

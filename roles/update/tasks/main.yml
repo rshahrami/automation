@@ -1,3 +1,4 @@
+---
 
 - name: Distribution
   debug: msg="{{ ansible_distribution }}"
@@ -28,7 +29,7 @@
 - name: Update packages to latest version.
   apt:
     upgrade: dist
-    force_apt_get: yes   
+    force_apt_get: yes
   when: ansible_distribution == "Ubuntu"
 
 
@@ -72,4 +73,3 @@
     post_reboot_delay: '{{ reboot_post_reboot_delay }}'
     test_command: uptime
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-
